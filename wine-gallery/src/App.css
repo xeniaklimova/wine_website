@@ -1,0 +1,245 @@
+.App {
+  text-align: center;
+}
+
+.layout {
+  display: flex;
+}
+
+.filter-sidebar {
+  width: 250px;
+  margin-top: 100px;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+  text-align: left;
+}
+
+.filter-section {
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.collapsible-title {
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+
+.country-list, .wine-type-list, .year-list {
+  max-height: 150px; /* Limit height */
+  overflow-y: auto;  /* Add scrollbar if content exceeds max-height */
+  padding-left: 5px;
+}
+
+.country-list div, .wine-type-list div {
+  margin-bottom: 8px;
+}
+
+input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.wine-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 5px;  /* Remove space between sort section and gallery */
+}
+.wine-gallery-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 0px; /* Remove any top margin */
+  padding: 20px;
+}
+
+/* Sort section styling */
+.sort-section {
+  display: flex;
+  justify-content: flex-end;  
+  margin-bottom: 5px;
+  width: 100%; 
+  padding-right: 20px; 
+  box-sizing: border-box; 
+  margin-top: 60px; 
+}
+.sort-section label {
+  margin-right: 5px;
+  font-weight: bold;
+  font-size: 14px;
+}
+.sort-section select {
+  padding: 5px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+
+.wine-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid #ccc;
+  padding: 20px;
+  background-color: #f9f9f9;
+  text-align: left;
+  height: 90%;
+}
+.wine-item img {
+  width: 100%;
+  height: 250px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+  border-radius: 10px;
+}
+
+.wine-price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: green;
+  text-align: center;
+  margin-top: auto;
+}
+
+/* Separate pagination container styling */
+.pagination-container {
+  grid-column: 1 / -1;  /* Spans across all columns */
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  margin-bottom: 40px;  /* Add space below pagination */
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.pagination-controls button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.pagination-controls button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.pagination-controls span {
+  font-size: 18px;
+}
+
+.price-range-slider {
+  width: 100%;
+  margin-top: 10px;
+
+}
+
+.slider-thumb {
+  height: 6px;   /* Make the thumb smaller */
+  width: 6px;
+  background-color: #999;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid pink;
+  position: relative;
+  top: -5px;  /* Align thumbs vertically with the track */
+}
+
+.slider-track {
+  background: #ccc;
+  height: 2px;
+}
+
+.price-input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.manual-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.manual-input input {
+  width: 40px;
+  text-align: center;
+}
+
+.price-input-slider {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+}
+
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.price-label {
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.price-input {
+  width: 40px;
+  text-align: center;
+  margin: 0 1px;
+  border: 1px solid gray;
+  border-radius: 5px;  /* Rounded corners */
+  padding: 2px;  /* Add some padding for a better look */
+  outline: none;  /* Remove the default focus outline */
+  -moz-appearance: textfield;   /* Remove number input arrows */
+}
+
+.price-input::-webkit-outer-spin-button,
+.price-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;  /* Remove number input arrows for WebKit */
+}
+
+.horizontal-slider {
+  width: 100%;
+  margin: 0 10px;
+  position: relative;
+}
+
+.reset-button {
+  display: block;
+  width: 125px;      /* Make the button bigger */
+  margin: 40px auto; /* Move the button lower and center it */
+  padding: 12px 20px;
+  background-color: #007BFF;
+  color: white;
+  font-size: 15px;   /* Increase the font size */
+  border: none;
+  border-radius: 5px;
+  font-family: 'Arial', sans-serif; /* Change the font */
+  cursor: pointer;
+}
+
+.reset-button:hover {
+  background-color: #0056b3;  /* Darken the button on hover */
+}
