@@ -1,13 +1,20 @@
-// src/Home.js
 import React from 'react';
-import './Home.css'; // Optional: Create a separate CSS file for Home component
+import './Home.css';
 
-function Home() {
+function Home({ searchQuery, setSearchQuery }) {
   return (
     <div className="home">
       <h1>Welcome to the Wine Shop</h1>
       <p>Discover our collection of fine wines from around the world.</p>
-      {/* Add more content as needed */}
+      
+      {/* Add a search bar on the homepage */}
+      <input
+        type="text"
+        placeholder="Search wines..."
+        className="home-search"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
     </div>
   );
 }

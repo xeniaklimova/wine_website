@@ -1,7 +1,8 @@
+import WineDetail from './WineDetail'; // Add this line at the top of your App.js
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import ReactSlider from 'react-slider';
-import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom'; 
+import { BrowserRouter as Router, Routes, Route, NavLink, useParams } from 'react-router-dom'; 
 import Home from './Home'; 
 import NotFound from './NotFound';
 import './App.css';
@@ -10,6 +11,7 @@ function App() {
   const [wines, setWines] = useState([]);
   const [filteredWines, setFilteredWines] = useState([]);
   const [sortOption, setSortOption] = useState('');
+  const [searchQuery, setSearchQuery] = useState(''); // Search query state
 
   // Visibility controls for collapsible sections
   const [isCountryVisible, setIsCountryVisible] = useState(true);
@@ -26,6 +28,7 @@ function App() {
   const winesPerPage = 20;
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Load wine data
   useEffect(() => {
     Papa.parse('/data/wines.csv', {
       download: true,
@@ -36,6 +39,34 @@ function App() {
       },
     });
   }, []);
+
+  // Search and filter functionality
+  useEffect(() => {
+    let filtered = wines.filter(wine => {
+      const searchStr = `${wine.title} ${wine.country} ${wine.variety}`.toLowerCase();
+      return searchStr.includes(searchQuery.toLowerCase());
+    });
+
+    if (filters.country.length > 0) {
+      filtered = filtered.filter(wine => filters.country.includes(wine.country));
+    }
+
+    if (filters.wineType.length > 0 && !filters.wineType.includes("All Types")) {
+      filtered = filtered.filter(wine => filters.wineType.includes(wine.wine_type));
+    }
+
+    if (filters.year.length > 0) {
+      filtered = filtered.filter(wine => filters.year.includes(wine.year));
+    }
+
+    filtered = filtered.filter(wine => {
+      const price = parseFloat(wine.price);
+      return price >= filters.priceRange[0] && price <= filters.priceRange[1];
+    });
+
+    const sortedWines = sortWines(filtered, sortOption);
+    setFilteredWines(sortedWines);
+  }, [searchQuery, filters, wines, sortOption]);
 
   // Sorting function
   const sortWines = (wines, sortOption) => {
@@ -55,44 +86,9 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    let filtered = wines;
-
-    if (filters.country.length > 0) {
-      filtered = filtered.filter(wine => filters.country.includes(wine.country));
-    }
-
-    if (filters.wineType.length > 0 && !filters.wineType.includes("All Types")) {
-      filtered = filtered.filter(wine => filters.wineType.includes(wine.wine_type));
-    }
-
-    if (filters.year.length > 0) {
-      filtered = filtered.filter(wine => filters.year.includes(wine.year));
-    }
-
-    filtered = filtered.filter(wine => {
-      const price = parseFloat(wine.price);
-      return price >= filters.priceRange[0] && price <= filters.priceRange[1];
-    });
-
-    // Sort the wines based on the selected sort option
-    const sortedWines = sortWines(filtered, sortOption);
-
-    setFilteredWines(sortedWines);
-  }, [filters, wines, sortOption]);
-
-  const availableCountries = [...new Set(wines
-    .map(wine => wine.country)
-    .filter(country => country && country.trim() !== ''))];
-
-  const wineTypes = [...new Set(wines
-    .map(wine => wine.wine_type)
-    .filter(type => type && type.trim() !== ''))];
-
-  const availableYears = [...new Set(wines
-    .map(wine => wine.year)
-    .filter(year => year && year.trim() !== ''))]
-    .sort((a, b) => b - a);
+  const availableCountries = [...new Set(wines.map(wine => wine.country).filter(Boolean))];
+  const wineTypes = [...new Set(wines.map(wine => wine.wine_type).filter(Boolean))];
+  const availableYears = [...new Set(wines.map(wine => wine.year).filter(Boolean))].sort((a, b) => b - a);
 
   const indexOfLastWine = currentPage * winesPerPage;
   const indexOfFirstWine = indexOfLastWine - winesPerPage;
@@ -111,10 +107,7 @@ function App() {
       ? filters.country.filter(c => c !== country)
       : [...filters.country, country];
 
-    setFilters({
-      ...filters,
-      country: newCountries,
-    });
+    setFilters({ ...filters, country: newCountries });
     setCurrentPage(1);
   };
 
@@ -123,10 +116,7 @@ function App() {
       ? filters.wineType.filter(t => t !== type)
       : [...filters.wineType, type];
 
-    setFilters({
-      ...filters,
-      wineType: newTypes,
-    });
+    setFilters({ ...filters, wineType: newTypes });
     setCurrentPage(1);
   };
 
@@ -135,18 +125,12 @@ function App() {
       ? filters.year.filter(y => y !== year)
       : [...filters.year, year];
 
-    setFilters({
-      ...filters,
-      year: newYears,
-    });
+    setFilters({ ...filters, year: newYears });
     setCurrentPage(1);
   };
 
   const handlePriceRangeSliderChange = (values) => {
-    setFilters({
-      ...filters,
-      priceRange: values,
-    });
+    setFilters({ ...filters, priceRange: values });
     setCurrentPage(1);
   };
 
@@ -170,14 +154,22 @@ function App() {
             <li><NavLink to="/" className={({ isActive }) => isActive ? 'active' : ''}>Home</NavLink></li>
             <li><NavLink to="/gallery" className={({ isActive }) => isActive ? 'active' : ''}>Wine Gallery</NavLink></li>
           </ul>
+          <input
+            type="text"
+            placeholder="Search wines..."
+            className="nav-search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </nav>
       </header>
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home searchQuery={searchQuery} setSearchQuery={setSearchQuery} />} />
         <Route path="/gallery" element={
           <div className="layout">
             <aside className="filter-sidebar">
+              {/* Country Filter */}
               <div className="filter-section">
                 <h3 onClick={() => setIsCountryVisible(!isCountryVisible)} className="collapsible-title">
                   Country {isCountryVisible ? '▾' : '▸'}
@@ -210,7 +202,7 @@ function App() {
                 )}
               </div>
 
-              {/* Similar structure for Wine Type and Year filters */}
+              {/* Wine Type Filter */}
               <div className="filter-section">
                 <h3 onClick={() => setIsWineTypeVisible(!isWineTypeVisible)} className="collapsible-title">
                   Wine Type {isWineTypeVisible ? '▾' : '▸'}
@@ -240,7 +232,7 @@ function App() {
                 </h3>
                 {isYearVisible && (
                   <div className="year-list">
-                    {availableYears.map(year => (
+                                       {availableYears.map(year => (
                       <div key={year}>
                         <input
                           type="checkbox"
@@ -292,13 +284,15 @@ function App() {
                 </select>
               </div>
 
-              {/* Wine Gallery */}
+              {/* Wine Gallery Display */}
               <div className="wine-gallery">
                 {currentWines.map((wine, index) => (
                   <div key={index} className="wine-item">
-                    <img src={wine.img_url} alt={wine.title} />
-                    <h2>{wine.title}</h2>
-                    <p className="wine-price">${wine.price}</p>
+                    <NavLink to={`/wine/${index}`}>
+                      <img src={wine.img_url} alt={wine.title} />
+                      <h2>{wine.title}</h2>
+                      <p className="wine-price">${wine.price}</p>
+                    </NavLink>
                   </div>
                 ))}
               </div>
@@ -314,6 +308,9 @@ function App() {
             </div>
           </div>
         } />
+
+        {/* Wine Detail Page Route */}
+        <Route path="/wine/:wineId" element={<WineDetail wines={wines} />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
@@ -321,3 +318,4 @@ function App() {
 }
 
 export default App;
+

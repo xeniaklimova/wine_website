@@ -51,6 +51,25 @@ nav ul li a.active {
   border-radius: 5px;
 }
 
+/* Navigation bar search input */
+.nav-search {
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  margin-left: 20px;
+}
+
+/* Homepage search input */
+.home-search {
+  margin-top: 20px;
+  padding: 12px;
+  font-size: 16px;
+  width: 300px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
 /* Responsive navigation bar for mobile */
 @media (max-width: 768px) {
   nav ul {
