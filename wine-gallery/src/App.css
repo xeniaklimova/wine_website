@@ -1,3 +1,69 @@
+/* General styling */
+body {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif; /* Use a sleek modern font */
+  background-color: #f4f4f4;
+}
+
+/* Navigation bar styling */
+.header {
+  background-color: #333;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h1 {
+  color: white;
+  font-weight: 600;
+  margin: 0;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 20px;
+}
+
+nav ul li {
+  display: inline;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 18px;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease;
+}
+
+nav ul li a:hover {
+  background-color: #555;
+  border-radius: 5px;
+}
+
+nav ul li a.active {
+  background-color: #007BFF;
+  border-radius: 5px;
+}
+
+/* Responsive navigation bar for mobile */
+@media (max-width: 768px) {
+  nav ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  nav ul li a {
+    font-size: 16px;
+  }
+}
+
+/* App content */
 .App {
   text-align: center;
 }
@@ -6,6 +72,7 @@
   display: flex;
 }
 
+/* Filter Sidebar styling */
 .filter-sidebar {
   width: 250px;
   margin-top: 100px;
@@ -29,10 +96,10 @@
   text-align: left;
 }
 
-
+/* List styling inside filters */
 .country-list, .wine-type-list, .year-list {
-  max-height: 150px; /* Limit height */
-  overflow-y: auto;  /* Add scrollbar if content exceeds max-height */
+  max-height: 150px;
+  overflow-y: auto;
   padding-left: 5px;
 }
 
@@ -44,35 +111,39 @@ input[type="checkbox"] {
   margin-right: 8px;
 }
 
+/* Wine Gallery */
 .wine-gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
-  margin-top: 5px;  /* Remove space between sort section and gallery */
+  margin-top: 5px;
 }
+
 .wine-gallery-container {
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin-top: 0px; /* Remove any top margin */
+  margin-top: 0px;
   padding: 20px;
 }
 
-/* Sort section styling */
+/* Sort section */
 .sort-section {
   display: flex;
-  justify-content: flex-end;  
+  justify-content: flex-end;
   margin-bottom: 5px;
-  width: 100%; 
-  padding-right: 20px; 
-  box-sizing: border-box; 
-  margin-top: 60px; 
+  width: 100%;
+  padding-right: 20px;
+  box-sizing: border-box;
+  margin-top: 60px;
 }
+
 .sort-section label {
   margin-right: 5px;
   font-weight: bold;
   font-size: 14px;
 }
+
 .sort-section select {
   padding: 5px;
   font-size: 14px;
@@ -81,7 +152,7 @@ input[type="checkbox"] {
   background-color: #f9f9f9;
 }
 
-
+/* Wine item */
 .wine-item {
   display: flex;
   flex-direction: column;
@@ -92,6 +163,7 @@ input[type="checkbox"] {
   text-align: left;
   height: 90%;
 }
+
 .wine-item img {
   width: 100%;
   height: 250px;
@@ -109,13 +181,13 @@ input[type="checkbox"] {
   margin-top: auto;
 }
 
-/* Separate pagination container styling */
+/* Pagination */
 .pagination-container {
-  grid-column: 1 / -1;  /* Spans across all columns */
+  grid-column: 1 / -1;
   display: flex;
   justify-content: center;
   margin-top: 40px;
-  margin-bottom: 40px;  /* Add space below pagination */
+  margin-bottom: 40px;
 }
 
 .pagination-controls {
@@ -142,21 +214,21 @@ input[type="checkbox"] {
   font-size: 18px;
 }
 
+/* Price range slider */
 .price-range-slider {
   width: 100%;
   margin-top: 10px;
-
 }
 
 .slider-thumb {
-  height: 6px;   /* Make the thumb smaller */
+  height: 6px;
   width: 6px;
   background-color: #999;
   border-radius: 50%;
   cursor: pointer;
   border: 2px solid pink;
   position: relative;
-  top: -5px;  /* Align thumbs vertically with the track */
+  top: -5px;
 }
 
 .slider-track {
@@ -164,6 +236,7 @@ input[type="checkbox"] {
   height: 2px;
 }
 
+/* Price input and manual input styling */
 .price-input-container {
   display: flex;
   flex-direction: column;
@@ -188,9 +261,7 @@ input[type="checkbox"] {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-
 }
-
 
 .input-group {
   display: flex;
@@ -209,15 +280,15 @@ input[type="checkbox"] {
   text-align: center;
   margin: 0 1px;
   border: 1px solid gray;
-  border-radius: 5px;  /* Rounded corners */
-  padding: 2px;  /* Add some padding for a better look */
-  outline: none;  /* Remove the default focus outline */
-  -moz-appearance: textfield;   /* Remove number input arrows */
+  border-radius: 5px;
+  padding: 2px;
+  outline: none;
+  -moz-appearance: textfield;
 }
 
 .price-input::-webkit-outer-spin-button,
 .price-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;  /* Remove number input arrows for WebKit */
+  -webkit-appearance: none;
 }
 
 .horizontal-slider {
@@ -226,20 +297,21 @@ input[type="checkbox"] {
   position: relative;
 }
 
+/* Reset button */
 .reset-button {
   display: block;
-  width: 125px;      /* Make the button bigger */
-  margin: 40px auto; /* Move the button lower and center it */
+  width: 125px;
+  margin: 40px auto;
   padding: 12px 20px;
   background-color: #007BFF;
   color: white;
-  font-size: 15px;   /* Increase the font size */
+  font-size: 15px;
   border: none;
   border-radius: 5px;
-  font-family: 'Arial', sans-serif; /* Change the font */
+  font-family: 'Arial', sans-serif;
   cursor: pointer;
 }
 
 .reset-button:hover {
-  background-color: #0056b3;  /* Darken the button on hover */
+  background-color: #0056b3;
 }
