@@ -13,6 +13,24 @@ function App() {
   const [sortOption, setSortOption] = useState('');
   const [searchQuery, setSearchQuery] = useState(''); // Search query state
 
+  // Manual price range setting through text box
+  const handleManualPriceChange = (e, type) => {
+    const value = parseInt(e.target.value, 10);
+    
+    if (type === 'min') {
+      setFilters({
+        ...filters,
+        priceRange: [Math.min(value, filters.priceRange[1]), filters.priceRange[1]]
+      });
+    } else if (type === 'max') {
+      setFilters({
+        ...filters,
+        priceRange: [filters.priceRange[0], Math.max(value, filters.priceRange[0])]
+      });
+    }
+  };
+  
+
   // Visibility controls for collapsible sections
   const [isCountryVisible, setIsCountryVisible] = useState(true);
   const [isWineTypeVisible, setIsWineTypeVisible] = useState(true);
@@ -30,7 +48,7 @@ function App() {
 
   // Load wine data
   useEffect(() => {
-    Papa.parse('/data/wines.csv', {
+    Papa.parse('/data/updated_wine_data.csv', {
       download: true,
       header: true,
       complete: function (results) {
@@ -95,8 +113,64 @@ function App() {
   const currentWines = filteredWines.slice(indexOfFirstWine, indexOfLastWine);
 
   const nextPage = () => setCurrentPage(prevPage => prevPage + 1);
-  const prevPage = () => setCurrentPage(prevPage - 1);
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
   const totalPages = Math.ceil(filteredWines.length / winesPerPage);
+
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    const totalPages = Math.ceil(filteredWines.length / winesPerPage);
+  
+    let startPage = currentPage - 2;
+    let endPage = currentPage + 2;
+  
+    if (startPage < 1) {
+      startPage = 1;
+      endPage = Math.min(5, totalPages); // Ensure only 5 pages show initially
+    }
+  
+    if (endPage > totalPages) {
+      endPage = totalPages;
+      startPage = Math.max(totalPages - 4, 1); // Ensure last few pages are visible
+    }
+  
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(
+        <button
+          key={i}
+          onClick={() => setCurrentPage(i)}
+          className={i === currentPage ? 'active' : ''}
+        >
+          {i}
+        </button>
+      );
+    }
+  
+    // Add ellipsis if there are more pages before or after
+    if (startPage > 1) {
+      pageNumbers.unshift(<span key="start-ellipsis">...</span>);
+      pageNumbers.unshift(
+        <button key="1" onClick={() => setCurrentPage(1)}>
+          1
+        </button>
+      );
+    }
+  
+    if (endPage < totalPages) {
+      pageNumbers.push(<span key="end-ellipsis">...</span>);
+      pageNumbers.push(
+        <button key={totalPages} onClick={() => setCurrentPage(totalPages)}>
+          {totalPages}
+        </button>
+      );
+    }
+  
+    return pageNumbers;
+  };
+
 
   const handleSortChange = (e) => {
     setSortOption(e.target.value);
@@ -251,6 +325,13 @@ function App() {
               {/* Price Range Filter */}
               <h3 className="collapsible-title">Price Range</h3>
               <div className="price-input-slider">
+                {/* Display the current price values */}
+                <div className="price-values">
+                  <span>Min: ${filters.priceRange[0]}</span>
+                  <span>Max: ${filters.priceRange[1]}</span>
+                </div>
+                
+                {/* Slider Component */}
                 <ReactSlider
                   className="horizontal-slider"
                   thumbClassName="slider-thumb"
@@ -261,6 +342,35 @@ function App() {
                   value={filters.priceRange}
                   onChange={handlePriceRangeSliderChange}
                 />
+
+                {/* Manual input fields */}
+                <div className="manual-input">
+                  <div className="input-group">
+                    <label htmlFor="minPrice">Min Price</label>
+                    <input
+                      type="number"
+                      id="minPrice"
+                      className="price-input"
+                      value={filters.priceRange[0]}
+                      onChange={(e) => handleManualPriceChange(e, 'min')}
+                      min="0"
+                      max="1500"
+                    />
+                  </div>
+
+                  <div className="input-group">
+                    <label htmlFor="maxPrice">Max Price</label>
+                    <input
+                      type="number"
+                      id="maxPrice"
+                      className="price-input"
+                      value={filters.priceRange[1]}
+                      onChange={(e) => handleManualPriceChange(e, 'max')}
+                      min="0"
+                      max="1500"
+                    />
+                  </div>
+                </div>
               </div>
 
               {/* Reset Filters Button */}
@@ -300,9 +410,15 @@ function App() {
               {/* Pagination Controls */}
               <div className="pagination-container">
                 <div className="pagination-controls">
-                  <button onClick={prevPage} disabled={currentPage === 1}>Previous</button>
-                  <span> Page {currentPage} of {totalPages} </span>
-                  <button onClick={nextPage} disabled={currentPage === totalPages}>Next</button>
+                  <button onClick={prevPage} disabled={currentPage === 1}>
+                    Previous
+                  </button>
+
+                  {renderPageNumbers()}
+
+                  <button onClick={nextPage} disabled={currentPage === totalPages}>
+                    Next
+                  </button>
                 </div>
               </div>
             </div>
