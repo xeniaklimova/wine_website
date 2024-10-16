@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import ReactSlider from 'react-slider';
-import { BrowserRouter as Router, Routes, Route, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import Home from './Home';
 import NotFound from './NotFound';
 import WineDetail from './WineDetail';
@@ -10,14 +10,6 @@ import './App.css';
 // Helper to extract query parameters
 function useQuery() {
   return new URLSearchParams(useLocation().search);
-}
-
-function AppWrapper() {
-  return (
-    <Router>
-      <App />
-    </Router>
-  );
 }
 
 function App() {
@@ -39,13 +31,10 @@ function App() {
     priceRange: [0, 1500],
     flavors: []
   });
-
+  
   const [currentPage, setCurrentPage] = useState(1);
 
   const winesPerPage = 12;
-
-  const query = useQuery();
-  const navigate = useNavigate();
 
   // Load wine data
   useEffect(() => {
@@ -58,17 +47,6 @@ function App() {
       },
     });
   }, []);
-
-  // Check for flavor query and apply to filter
-  useEffect(() => {
-    const flavorFromQuery = query.get('flavor');
-    if (flavorFromQuery) {
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        flavors: [flavorFromQuery],
-      }));
-    }
-  }, [query]);
 
   // Manual price range setting through text box
   const handleManualPriceChange = (e, type) => {
@@ -85,24 +63,6 @@ function App() {
       });
     }
     setCurrentPage(1); // Reset to first page when filters are changed
-  };
-
-  // Sorting function
-  const sortWines = (wines, sortOption) => {
-    switch (sortOption) {
-      case 'name-asc':
-        return [...wines].sort((a, b) => a.title.localeCompare(b.title));
-      case 'name-desc':
-        return [...wines].sort((a, b) => b.title.localeCompare(a.title));
-      case 'highest-rated':
-        return [...wines].sort((a, b) => parseFloat(b.points) - parseFloat(a.points));
-      case 'price-low-high':
-        return [...wines].sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
-      case 'price-high-low':
-        return [...wines].sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
-      default:
-        return wines;
-    }
   };
 
   // Update filters and sorting when searchQuery or filters change
@@ -140,6 +100,24 @@ function App() {
     const sortedWines = sortWines(filtered, sortOption);
     setFilteredWines(sortedWines);
   }, [searchQuery, filters, wines, sortOption]);
+
+  // Sorting function
+  const sortWines = (wines, sortOption) => {
+    switch (sortOption) {
+      case 'name-asc':
+        return [...wines].sort((a, b) => a.title.localeCompare(b.title));
+      case 'name-desc':
+        return [...wines].sort((a, b) => b.title.localeCompare(a.title));
+      case 'highest-rated':
+        return [...wines].sort((a, b) => parseFloat(b.points) - parseFloat(a.points));
+      case 'price-low-high':
+        return [...wines].sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+      case 'price-high-low':
+        return [...wines].sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+      default:
+        return wines;
+    }
+  };
 
   const availableCountries = [...new Set(wines.map(wine => wine.country).filter(Boolean))];
   const wineTypes = [...new Set(wines.map(wine => wine.wine_type).filter(Boolean))];
@@ -256,12 +234,8 @@ function App() {
     setSortOption('');
   };
 
-  const handleFlavorClick = (flavor) => {
-    navigate(`/gallery?flavor=${flavor}`);
-  };
-
   return (
-    <div>
+    <Router>
       <header className="header">
         <NavLink to="/" className="logo">
           <h1>Wine Shop</h1>
@@ -361,7 +335,7 @@ function App() {
                         <button
                           key={flavor}
                           className={`flavor-button ${flavor} ${filters.flavors.includes(flavor) ? 'selected' : ''}`}
-                          onClick={() => handleFlavorClick(flavor)}
+                          onClick={() => handleFlavorChange(flavor)}
                         >
                           {flavor}
                         </button>
@@ -466,8 +440,8 @@ function App() {
         <Route path="/wine/:wineId" element={<WineDetail wines={wines} />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </div>
+    </Router>
   );
 }
 
-export default AppWrapper;
+export default App;

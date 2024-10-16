@@ -17,8 +17,8 @@ function Home({ searchQuery, setSearchQuery }) {
         onChange={(e) => setSearchQuery(e.target.value)}
       />
 
-      <NavLink to="/quiz">
-        <button>Take the Wine Quiz</button>
+      <NavLink to="/gallery">
+        <button>View Wine Gallery</button>
       </NavLink>
     </div>
   );

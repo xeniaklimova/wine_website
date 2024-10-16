@@ -1,13 +1,14 @@
 /* General styling */
 body {
   margin: 0;
-  font-family: 'Montserrat', sans-serif; /* Use a sleek modern font */
-  background-color: #f4f4f4;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #ffffff; /* Main background color */
+  color: #42354C; /* General text color */
 }
 
 /* Navigation bar styling */
 .header {
-  background-color: #333;
+  background-color: #6A1D2F; /* Burgundy for header */
   padding: 20px;
   display: flex;
   justify-content: space-between;
@@ -15,8 +16,8 @@ body {
 }
 
 .header h1 {
-  color: white;
-  font-weight: 600;
+  color: #DEA450; /* Gold for logo */
+  font-weight: 700;
   margin: 0;
 }
 
@@ -33,7 +34,7 @@ nav ul li {
 }
 
 nav ul li a {
-  color: white;
+  color: #ffffff; /* White links */
   text-decoration: none;
   font-weight: 400;
   font-size: 18px;
@@ -42,12 +43,12 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-  background-color: #555;
+  background-color: #9B461F; /* Rust Red on hover */
   border-radius: 5px;
 }
 
 nav ul li a.active {
-  background-color: #007BFF;
+  background-color: #DEA450; /* Gold for active state */
   border-radius: 5px;
 }
 
@@ -58,16 +59,6 @@ nav ul li a.active {
   border-radius: 5px;
   border: 1px solid #ddd;
   margin-left: 20px;
-}
-
-/* Homepage search input */
-.home-search {
-  margin-top: 20px;
-  padding: 12px;
-  font-size: 16px;
-  width: 300px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
 }
 
 /* Responsive navigation bar for mobile */
@@ -82,11 +73,7 @@ nav ul li a.active {
   }
 }
 
-/* App content */
-.App {
-  text-align: center;
-}
-
+/* Layout styling */
 .layout {
   display: flex;
 }
@@ -97,7 +84,7 @@ nav ul li a.active {
   margin-top: 100px;
   padding: 20px;
   border-right: 1px solid #ddd;
-  text-align: left;
+  background-color: #F9F9F9;
 }
 
 .filter-section {
@@ -105,36 +92,24 @@ nav ul li a.active {
   border: 1px solid #ddd;
   border-radius: 5px;
   padding: 10px;
+  background-color: #ffffff; /* Keep filter sections white */
 }
 
 .collapsible-title {
   cursor: pointer;
   font-size: 16px;
   font-weight: bold;
-  text-transform: uppercase;
-  text-align: left;
-}
-
-/* List styling inside filters */
-.country-list, .wine-type-list, .year-list {
-  max-height: 150px;
-  overflow-y: auto;
-  padding-left: 5px;
-}
-
-.country-list div, .wine-type-list div {
-  margin-bottom: 8px;
+  color: #354C3C; /* Dark green for section titles */
 }
 
 input[type="checkbox"] {
   margin-right: 8px;
 }
 
-/* Wine Gallery */
 .wine-gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Increase min size to make boxes larger */
+  gap: 30px; /* Increase the gap between wine cards */
   margin-top: 5px;
 }
 
@@ -149,6 +124,7 @@ input[type="checkbox"] {
 /* Sort section */
 .sort-section {
   display: flex;
+  align-items: center;  /* Ensures vertical alignment */
   justify-content: flex-end;
   margin-bottom: 5px;
   width: 100%;
@@ -158,95 +134,96 @@ input[type="checkbox"] {
 }
 
 .sort-section label {
-  margin-right: 5px;
+  margin-right: 10px; /* Adjust spacing between label and select */
   font-weight: bold;
   font-size: 14px;
+  color: #354C3C; /* Dark green for labels */
+  line-height: 1; /* Ensures the text aligns nicely with the select box */
 }
 
 .sort-section select {
-  padding: 5px;
+  padding: 8px; /* Increased padding for a nicer appearance */
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #f9f9f9;
+  height: 40px; /* Ensure height matches */
+  line-height: 1.2; /* To make sure the text inside the select is aligned */
 }
+
 
 /* Wine item */
 .wine-item {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: #F9F9F9;
   text-align: left;
-  height: 90%;
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add transition for smooth effect */
+  height: 100%; /* Ensure cards take up full height */
+  min-height: 400px; /* Increase the minimum height for the text to fit */
+  border-radius: 10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .wine-item:hover {
-  transform: translateY(-10px); /* Slightly lift the block */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for more emphasis */
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
 
 .wine-item a {
-  text-decoration: none; /* Remove underline */
-  color: black; /* Set text color to black */
+  text-decoration: none;
+  color: #42354C; /* Plum for link color */
 }
 
-.wine-item a:visited {
-  color: black; /* Ensure visited links remain black */
+.wine-item a:hover {
+  color: #6A1D2F; /* Burgundy hover effect */
 }
-
 
 .wine-item img {
   width: 100%;
-  height: 250px;
+  height: 300px; /* Increase height for the image */
   object-fit: contain;
-  display: block;
-  margin: 0 auto;
   border-radius: 10px;
+  margin-bottom: 15px; /* Add margin to separate the image from text */
 }
 
 .wine-price {
   font-size: 1.2rem;
   font-weight: bold;
-  color: green;
+  color: #DEA450; /* Gold for price */
   text-align: center;
   margin-top: auto;
 }
 
 /* Pagination */
 .pagination-container {
-  grid-column: 1 / -1;
   display: flex;
   justify-content: center;
   margin-top: 40px;
   margin-bottom: 40px;
 }
 
-.pagination-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-}
-
-.pagination-controls button {
+.pagination-container button {
   padding: 10px 20px;
-  background-color: #4CAF50;
+  background-color: #354C3C; /* Dark green for pagination */
   color: white;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.pagination-controls button:disabled {
+.pagination-container button:hover {
+  background-color: #6A1D2F; /* Burgundy on hover */
+}
+
+.pagination-container button:disabled {
   background-color: #ddd;
-  cursor: not-allowed;
 }
 
-.pagination-controls button.active {
+.pagination-container button.active {
   background-color: #007BFF;
   color: white;
   border-radius: 5px;
@@ -254,27 +231,22 @@ input[type="checkbox"] {
 }
 
 
-.pagination-controls span {
-  font-size: 18px;
-}
-
-/* Price range slider */
-.price-range-slider {
-  width: 100%;
+/* Price range slider container */
+.price-input-slider {
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  align-items: center; /* Center align everything */
+  width: 100%; /* Make the container full width */
   margin-top: 10px;
 }
 
-/* Price range values */
-.price-values {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
+/* Manual input fields - Min and Max */
 .manual-input {
   display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
+  justify-content: space-between; /* Ensure the input fields are on opposite sides */
+  width: 100%;
+  max-width: 900px; /* Set a max width for the entire slider container */
+  margin-bottom: 15px; /* Add space between the inputs and the slider */
 }
 
 .input-group {
@@ -284,7 +256,7 @@ input[type="checkbox"] {
 }
 
 .price-input {
-  width: 80px;
+  width: 70px; /* Keep input fields compact */
   text-align: center;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -293,94 +265,48 @@ input[type="checkbox"] {
   margin-top: 5px;
 }
 
+.input-label {
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 5px;
+  transform: translateY(-10px);
+}
+
+.price-range-slider {
+  width: 100%; /* Ensure the slider container takes up full width */
+  margin-top: 10px;
+  display: flex;
+  justify-content: center; /* Center the slider within the container */
+}
+
+
+/* Slider styling */
+.horizontal-slider {
+  width: 100%;
+  max-width: 900px; /* Ensure the slider takes the maximum width available */
+  margin: 0 auto; /* Center the slider */
+  position: relative;
+  height: 8px; /* Set a reasonable height for the track */
+}
 
 .slider-thumb {
-  height: 6px;
-  width: 6px;
-  background-color: #999;
+  height: 10px; /* Thumb size */
+  width: 10px;
+  background-color: #9B461F; /* Rust Red for thumb */
   border-radius: 50%;
   cursor: pointer;
-  border: 2px solid pink;
+  border: 2px solid #DEA450; /* Gold border for visibility */
   position: relative;
-  top: -5px;
+  top: -3px;
 }
 
 .slider-track {
   background: #ccc;
-  height: 2px;
+  height: 5px; /* Track height for visibility */
 }
 
-/* Price input and manual input styling */
-.price-input-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.manual-input {
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* Ensures inputs and slider are spaced out */
-  width: 100%;
-  margin-top: 10px;
-}
-
-.manual-input input {
-  width: 35px;
-  text-align: center;
-  font-size: 12px;
-}
-
-.price-input-slider {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
-.input-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100px; /* Adjust as needed for your design */
-  margin-top: -10px;  /* Moves the inputs higher */
-}
-
-.price-label {
-  font-size: 12px;
-  color: #555;
-  margin-bottom: 5px;
-}
-
-.price-input {
-  width: 35px;
-  text-align: center;
-  margin: 0 1px;
-  border: 1px solid gray;
-  border-radius: 5px;
-  padding: 2px;
-  outline: none;
-  -moz-appearance: textfield;
-  margin-top: -10px;  /* Moves inputs higher */
-}
-
-.input-label {
-  font-size: 12px;
-  color: #555;  /* Light gray color */
-  margin-bottom: 5px;  /* Add some space between label and input */
-  transform: translateY(-10px);  /* Moves the text labels higher */
-}
-
-.price-input::-webkit-outer-spin-button,
-.price-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-}
-
-.horizontal-slider {
-  width: 100%;
-  margin: 0 5px;
-  position: relative;
+.slider-thumb:hover {
+  background-color: #6A1D2F; /* Darker color on hover */
 }
 
 /* Reset button */
@@ -389,7 +315,7 @@ input[type="checkbox"] {
   width: 125px;
   margin: 40px auto;
   padding: 12px 20px;
-  background-color: #007BFF;
+  background-color: #9B461F; /* Rust Red */
   color: white;
   font-size: 15px;
   border: none;
@@ -399,20 +325,21 @@ input[type="checkbox"] {
 }
 
 .reset-button:hover {
-  background-color: #0056b3;
+  background-color: #6A1D2F; /* Burgundy hover */
 }
 
+/* Flavor buttons */
 .flavor-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;  /* Small gap between buttons */
+  gap: 8px;
 }
 
 .flavor-button {
-  padding: 5px 10px;  /* Smaller padding */
+  padding: 5px 10px;
   border: 1px solid #ccc;
   background-color: #f9f9f9;
-  border-radius: 8px;  /* More rectangular shape */
+  border-radius: 8px;
   font-size: 12px;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
@@ -423,70 +350,186 @@ input[type="checkbox"] {
 }
 
 .flavor-button.selected {
-  color: white;  /* Keep text white */
+  color: white;
 }
 
 /* Unique colors for each selected flavor */
 .flavor-button.vanilla.selected {
-  background-color: #FFC300;  /* Light Gold */
+  background-color: #FFC300; /* Light Gold */
 }
 
 .flavor-button.leather.selected {
-  background-color: #A52A2A;  /* Brown */
+  background-color: #A52A2A; /* Brown */
 }
 
 .flavor-button.coffee.selected {
-  background-color: #6F4E37;  /* Dark Coffee */
+  background-color: #6F4E37; /* Dark Coffee */
 }
 
 .flavor-button.wood.selected {
-  background-color: #8B5A2B;  /* Light Brown */
+  background-color: #8B5A2B; /* Light Brown */
 }
 
 .flavor-button.smoky.selected {
-  background-color: #708090;  /* Slate Gray */
+  background-color: #708090; /* Slate Gray */
 }
 
 .flavor-button.fruit.selected {
-  background-color: #FF6347;  /* Tomato Red */
+  background-color: #FF6347; /* Tomato Red */
 }
 
 .flavor-button.berry.selected {
-  background-color: #9400D3;  /* Dark Violet */
+  background-color: #9400D3; /* Dark Violet */
 }
 
 .flavor-button.spice.selected {
-  background-color: #CD5C5C;  /* Indian Red */
+  background-color: #CD5C5C; /* Indian Red */
 }
 
 .flavor-button.chocolate.selected {
-  background-color: #3C1414;  /* Dark Brown */
+  background-color: #3C1414; /* Dark Brown */
 }
 
 .flavor-button.butter.selected {
-  background-color: #FFD700;  /* Dark Gold */
+  background-color: #FFD700; /* Dark Gold */
 }
 
 .flavor-button.herbs.selected {
-  background-color: #228B22;  /* Forest Green */
+  background-color: #228B22; /* Forest Green */
 }
 
 .flavor-button.flowers.selected {
-  background-color: #FF69B4;  /* Hot Pink */
+  background-color: #FF69B4; /* Hot Pink */
 }
 
 .flavor-button.citrus.selected {
-  background-color: #FFA500;  /* Orange */
+  background-color: #FFA500; /* Orange */
 }
 
 .flavor-button.mineral.selected {
-  background-color: #4682B4;  /* Steel Blue */
+  background-color: #4682B4; /* Steel Blue */
 }
 
 .flavor-button.nuts.selected {
-  background-color: #D2B48C;  /* Tan */
+  background-color: #D2B48C; /* Tan */
 }
 
 .flavor-button.caramel.selected {
-  background-color: #D2691E;  /* Chocolate */
+  background-color: #D2691E; /* Chocolate */
+}
+
+/* Wine Detail Page */
+.wine-detail {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 40px auto;
+  max-width: 1200px;
+  padding: 20px;
+  gap: 40px;
+  background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.wine-detail img {
+  width: auto; /* Automatically adjust the width */
+  max-width: 400px; /* Limit the maximum width */
+  height: auto; /* Ensure the aspect ratio is maintained */
+  max-height: 500px; /* Set a maximum height for consistency */
+  object-fit: contain; /* Ensure the image fits within the specified bounds */
+  border-radius: 10px;
+}
+
+.wine-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  max-width: 600px;
+}
+
+.wine-info h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #6A1D2F;
+}
+
+.wine-info p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.wine-info .wine-price {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #DEA450;
+  margin-top: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .wine-detail {
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .wine-detail img {
+    width: 100%;
+    max-width: 500px;
+    max-height: 300px; /* Slightly smaller images on small screens */
+  }
+
+  .wine-info {
+    text-align: center;
+    max-width: 100%;
+  }
+}
+
+/* Flavors list styling */
+.wine-flavors {
+  margin-top: 20px;
+}
+
+.wine-flavors ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.flavor-item {
+  display: inline-block;
+  background-color: #f4f4f4;
+  color: #6A1D2F;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-right: 10px;
+  margin-bottom: 5px;
+  cursor: pointer; /* Show pointer on hover */
+  transition: background-color 0.3s ease;
+}
+
+.flavor-item:hover {
+  background-color: #DEA450; /* Change color on hover */
+  color: #fff; /* White text on hover */
+}
+
+.wine-flavors li {
+  display: inline-block;
+  background-color: #f4f4f4;
+  color: #6A1D2F;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-right: 10px;
+  margin-bottom: 5px;
+}
+
+.wine-info a {
+  color: #DEA450; /* Gold color for the Twitter handle link */
+  text-decoration: none;
+}
+
+.wine-info a:hover {
+  text-decoration: underline;
 }
