@@ -401,3 +401,92 @@ input[type="checkbox"] {
 .reset-button:hover {
   background-color: #0056b3;
 }
+
+.flavor-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;  /* Small gap between buttons */
+}
+
+.flavor-button {
+  padding: 5px 10px;  /* Smaller padding */
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  border-radius: 8px;  /* More rectangular shape */
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.flavor-button:hover {
+  background-color: #ddd;
+}
+
+.flavor-button.selected {
+  color: white;  /* Keep text white */
+}
+
+/* Unique colors for each selected flavor */
+.flavor-button.vanilla.selected {
+  background-color: #FFC300;  /* Light Gold */
+}
+
+.flavor-button.leather.selected {
+  background-color: #A52A2A;  /* Brown */
+}
+
+.flavor-button.coffee.selected {
+  background-color: #6F4E37;  /* Dark Coffee */
+}
+
+.flavor-button.wood.selected {
+  background-color: #8B5A2B;  /* Light Brown */
+}
+
+.flavor-button.smoky.selected {
+  background-color: #708090;  /* Slate Gray */
+}
+
+.flavor-button.fruit.selected {
+  background-color: #FF6347;  /* Tomato Red */
+}
+
+.flavor-button.berry.selected {
+  background-color: #9400D3;  /* Dark Violet */
+}
+
+.flavor-button.spice.selected {
+  background-color: #CD5C5C;  /* Indian Red */
+}
+
+.flavor-button.chocolate.selected {
+  background-color: #3C1414;  /* Dark Brown */
+}
+
+.flavor-button.butter.selected {
+  background-color: #FFD700;  /* Dark Gold */
+}
+
+.flavor-button.herbs.selected {
+  background-color: #228B22;  /* Forest Green */
+}
+
+.flavor-button.flowers.selected {
+  background-color: #FF69B4;  /* Hot Pink */
+}
+
+.flavor-button.citrus.selected {
+  background-color: #FFA500;  /* Orange */
+}
+
+.flavor-button.mineral.selected {
+  background-color: #4682B4;  /* Steel Blue */
+}
+
+.flavor-button.nuts.selected {
+  background-color: #D2B48C;  /* Tan */
+}
+
+.flavor-button.caramel.selected {
+  background-color: #D2691E;  /* Chocolate */
+}

@@ -14,18 +14,40 @@ function App() {
   const [filteredWines, setFilteredWines] = useState([]);
   const [sortOption, setSortOption] = useState('');
   const [searchQuery, setSearchQuery] = useState(''); // Search query state
+
+  // Manual price range setting through text box
+  const handleManualPriceChange = (e, type) => {
+    const value = parseInt(e.target.value, 10);
+    
+    if (type === 'min') {
+      setFilters({
+        ...filters,
+        priceRange: [Math.min(value, filters.priceRange[1]), filters.priceRange[1]]
+      });
+    } else if (type === 'max') {
+      setFilters({
+        ...filters,
+        priceRange: [filters.priceRange[0], Math.max(value, filters.priceRange[0])]
+      });
+    }
+  };
+  
+
+  // Visibility controls for collapsible sections
+  const [isCountryVisible, setIsCountryVisible] = useState(true);
+  const [isWineTypeVisible, setIsWineTypeVisible] = useState(true);
+  const [isYearVisible, setIsYearVisible] = useState(true);
+  const [isFlavorVisible, setIsFlavorVisible] = useState(true);
+
   const [filters, setFilters] = useState({
     country: [],
     wineType: [],
     year: [],
     priceRange: [0, 1500],
+    flavors: [] // new state to track selected filters
   });
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Collapsible filter sections state
-  const [isCountryVisible, setIsCountryVisible] = useState(true);
-  const [isWineTypeVisible, setIsWineTypeVisible] = useState(true);
-  const [isYearVisible, setIsYearVisible] = useState(true);
 
   const winesPerPage = 20;
 
@@ -64,6 +86,14 @@ function App() {
       const price = parseFloat(wine.price);
       return price >= filters.priceRange[0] && price <= filters.priceRange[1];
     });
+
+      // Flavor tags filter
+    if (filters.flavors.length > 0) {
+      filtered = filtered.filter(wine => {
+        const wineFlavors = wine.extracted_flavors || [];  // Ensure extracted_flavors is an array
+        return filters.flavors.every(flavor => wineFlavors.includes(flavor));
+      });
+    }
 
     const sortedWines = sortWines(filtered, sortOption);
     setFilteredWines(sortedWines);
@@ -190,6 +220,15 @@ function App() {
     setCurrentPage(1);
   };
 
+  const handleFlavorChange = (flavor) => {
+    const newFlavors = filters.flavors.includes(flavor)
+      ? filters.flavors.filter(f => f !== flavor)  // Remove the flavor if already selected
+      : [...filters.flavors, flavor];  // Add the flavor if not selected
+  
+    setFilters({ ...filters, flavors: newFlavors });
+    setCurrentPage(1);  // Reset to first page after filter change
+  };
+
   const resetFilters = () => {
     setFilters({
       country: [],
@@ -275,75 +314,98 @@ function App() {
                   )}
                 </div>
 
-                {/* Year Filter */}
-                <div className="filter-section">
-                  <h3 onClick={() => setIsYearVisible(!isYearVisible)} className="collapsible-title">
-                    Year {isYearVisible ? '▾' : '▸'}
-                  </h3>
-                  {isYearVisible && (
-                    <div className="year-list">
-                      {availableYears.map(year => (
-                        <div key={year}>
-                          <input
-                            type="checkbox"
-                            id={year}
-                            value={year}
-                            onChange={() => handleYearChange(year)}
-                            checked={filters.year.includes(year)}
-                          />
-                          <label htmlFor={year}>{year}</label>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+              {/* Year Filter */}
+              <div className="filter-section">
+                <h3 onClick={() => setIsYearVisible(!isYearVisible)} className="collapsible-title">
+                  Year {isYearVisible ? '▾' : '▸'}
+                </h3>
+                {isYearVisible && (
+                  <div className="year-list">
+                                       {availableYears.map(year => (
+                      <div key={year}>
+                        <input
+                          type="checkbox"
+                          id={year}
+                          value={year}
+                          onChange={() => handleYearChange(year)}
+                          checked={filters.year.includes(year)}
+                        />
+                        <label htmlFor={year}>{year}</label>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
 
-                {/* Price Range Filter */}
-                <div className="filter-section">
-                  <h3>Price Range</h3>
-                  <div className="price-input-slider">
-                    <div className="manual-input">
-                      <div className="input-group">
-                        <span className="input-label">From:</span>
-                        <input
-                          type="number"
-                          className="price-input"
-                          value={filters.priceRange[0]}
-                          onChange={(e) => setFilters({
-                            ...filters,
-                            priceRange: [parseInt(e.target.value, 10), filters.priceRange[1]]
-                          })}
-                          min="0"
-                          max="1500"
-                        />
-                      </div>
-                      <ReactSlider
-                        className="horizontal-slider"
-                        thumbClassName="slider-thumb"
-                        trackClassName="slider-track"
-                        min={0}
-                        max={1500}
-                        step={10}
-                        value={filters.priceRange}
-                        onChange={handlePriceRangeSliderChange}
-                      />
-                      <div className="input-group">
-                        <span className="input-label">To:</span>
-                        <input
-                          type="number"
-                          className="price-input"
-                          value={filters.priceRange[1]}
-                          onChange={(e) => setFilters({
-                            ...filters,
-                            priceRange: [filters.priceRange[0], parseInt(e.target.value, 10)]
-                          })}
-                          min="0"
-                          max="1500"
-                        />
-                      </div>
-                    </div>
+              {/* Flavor tags */}
+              <div className="filter-section">
+            <h3 onClick={() => setIsFlavorVisible(!isFlavorVisible)} className="collapsible-title">
+              Flavors {isFlavorVisible ? '▾' : '▸'}
+            </h3>
+            {isFlavorVisible && (
+              <div className="flavor-list">
+                {['vanilla', 'leather', 'coffee', 'wood', 'smoky', 'fruit', 'berry', 'spice', 'chocolate', 'butter', 'herbs', 'flowers', 'citrus', 'mineral', 'nuts', 'caramel'].map(flavor => (
+                  <button
+                    key={flavor}
+                    className={`flavor-button ${flavor} ${filters.flavors.includes(flavor) ? 'selected' : ''}`}
+                    onClick={() => handleFlavorChange(flavor)}
+                  >
+                    {flavor}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          
+              {/* Price Range Filter */}
+              <h3 className="collapsible-title">Price Range</h3>
+              <div className="price-input-slider">
+                
+                {/* Manual input fields - Min and Max positioned correctly */}
+                <div className="manual-input">
+                  <div className="input-group">
+                    {/* <label htmlFor="minPrice">Min Price</label> */}
+                    <span className="input-label">from:</span>  {/* Small text label above the input */}
+                    <input
+                      type="number"
+                      id="minPrice"
+                      className="price-input"
+                      value={filters.priceRange[0]}
+                      onChange={(e) => handleManualPriceChange(e, 'min')}
+                      min="0"
+                      max="1500"
+                      placeholder="min price"
+                    />
+                  </div>
+
+                  {/* Slider Component - Positioned in between the inputs */}
+                  <ReactSlider
+                    className="horizontal-slider"
+                    thumbClassName="slider-thumb"
+                    trackClassName="slider-track"
+                    min={0}
+                    max={1500}
+                    step={5}
+                    value={filters.priceRange}
+                    onChange={handlePriceRangeSliderChange}
+                  />
+
+                  <div className="input-group">
+                    {/* <label htmlFor="maxPrice">Max Price</label> */}
+                    <span className="input-label">to:</span>  {/* Small text label above the input */}
+                    <input
+                      type="number"
+                      id="maxPrice"
+                      className="price-input"
+                      value={filters.priceRange[1]}
+                      onChange={(e) => handleManualPriceChange(e, 'max')}
+                      min="0"
+                      max="1500"
+                      placeholder="max price"
+                    />
                   </div>
                 </div>
+              </div>
 
                 {/* Reset Filters Button */}
                 <button className="reset-button" onClick={resetFilters}>
