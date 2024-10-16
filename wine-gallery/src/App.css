@@ -543,3 +543,29 @@ input[type="checkbox"] {
 .wine-info a:hover {
   text-decoration: underline;
 }
+
+/* Styling for the Style filter section */
+.style-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14px;
+}
+
+/* Ensure checkboxes and labels are styled consistently */
+.style-list input[type="checkbox"] {
+  margin-right: 8px;
+  
+}
+
+/* Styling for the Style filter section */
+.style-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Ensure checkboxes and labels are styled consistently */
+.style-list input[type="checkbox"] {
+  margin-right: 8px;
+}
