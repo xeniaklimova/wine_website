@@ -33,13 +33,15 @@ function App() {
   const [isWineTypeVisible, setIsWineTypeVisible] = useState(true);
   const [isYearVisible, setIsYearVisible] = useState(true);
   const [isFlavorVisible, setIsFlavorVisible] = useState(true);
+  const [isStyleVisible, setIsStyleVisible] = useState(true);
 
   const [filters, setFilters] = useState({
     country: [],
     wineType: [],
     year: [],
     priceRange: [0, 1500],
-    flavors: []
+    flavors: [],
+    style: []
   });
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,7 +53,7 @@ function App() {
 
   // Load wine data
   useEffect(() => {
-    Papa.parse('/data/updated_wine_data.csv', {
+    Papa.parse('/data/updated_wine_data_with_styles.csv', {
       download: true,
       header: true,
       complete: function (results) {
@@ -125,7 +127,11 @@ function App() {
     if (filters.year.length > 0) {
       filtered = filtered.filter(wine => filters.year.includes(wine.year));
     }
-  
+
+    if (filters.style.length > 0) {
+      filtered = filtered.filter(wine => filters.style.includes(wine.style));  // Filter based on style
+    }
+
     filtered = filtered.filter(wine => {
       const price = parseFloat(wine.price);
       return price >= filters.priceRange[0] && price <= filters.priceRange[1];
@@ -145,6 +151,10 @@ function App() {
   const availableCountries = [...new Set(wines.map(wine => wine.country).filter(Boolean))];
   const wineTypes = [...new Set(wines.map(wine => wine.wine_type).filter(Boolean))];
   const availableYears = [...new Set(wines.map(wine => wine.year).filter(Boolean))].sort((a, b) => b - a);
+  const availableStyles = [...new Set(
+    wines.map(wine => wine.style)
+    .filter(style => style && style !== "Outlier/Not Classified")
+  )].sort((a, b) => a.localeCompare(b));
 
   const indexOfLastWine = currentPage * winesPerPage;
   const indexOfFirstWine = indexOfLastWine - winesPerPage;
@@ -245,13 +255,23 @@ function App() {
     setCurrentPage(1);
   };
 
+  const handleStyleChange = (style) => {  // Handle style changes
+    const newStyles = filters.style.includes(style)
+      ? filters.style.filter(s => s !== style)
+      : [...filters.style, style];
+
+    setFilters({ ...filters, style: newStyles });
+    setCurrentPage(1);
+  };
+
   const resetFilters = () => {
     setFilters({
       country: [],
       wineType: [],
       year: [],
       priceRange: [0, 1500],
-      flavors: [] // Ensure the flavor filter is fully reset
+      flavors: [],
+      style: []
     });
     setCurrentPage(1); // Reset to the first page
     setSortOption(''); // Reset sort option if needed
@@ -380,7 +400,30 @@ function App() {
                   )}
                 </div>
 
-                {/* Flavor Filter */}
+                {/* Style Filter */}
+                <div className="filter-section">
+                  <h3 onClick={() => setIsStyleVisible(!isStyleVisible)} className="collapsible-title">
+                    Style {isStyleVisible ? '▾' : '▸'}
+                  </h3>
+                  {isStyleVisible && (
+                    <div className="style-list">
+                      {availableStyles.map(style => (
+                        <div key={style}>
+                          <input
+                            type="checkbox"
+                            id={style}
+                            value={style}
+                            onChange={() => handleStyleChange(style)}
+                            checked={filters.style.includes(style)}
+                          />
+                          <label htmlFor={style}>{style}</label>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Flavor tags */}
                 <div className="filter-section">
                   <h3 onClick={() => setIsFlavorVisible(!isFlavorVisible)} className="collapsible-title">
                     Flavors {isFlavorVisible ? '▾' : '▸'}

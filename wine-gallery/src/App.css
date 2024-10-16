@@ -592,3 +592,30 @@ input[type="checkbox"] {
 .back-button:hover {
   background-color: #9B461F; /* Darker burgundy on hover */
 }
+
+
+/* Styling for the Style filter section */
+.style-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14px;
+}
+
+/* Ensure checkboxes and labels are styled consistently */
+.style-list input[type="checkbox"] {
+  margin-right: 8px;
+  
+}
+
+/* Styling for the Style filter section */
+.style-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Ensure checkboxes and labels are styled consistently */
+.style-list input[type="checkbox"] {
+  margin-right: 8px;
+}
