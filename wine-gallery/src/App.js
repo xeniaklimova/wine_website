@@ -325,28 +325,12 @@ function App() {
               {/* Price Range Filter */}
               <h3 className="collapsible-title">Price Range</h3>
               <div className="price-input-slider">
-                {/* Display the current price values */}
-                <div className="price-values">
-                  <span>Min: ${filters.priceRange[0]}</span>
-                  <span>Max: ${filters.priceRange[1]}</span>
-                </div>
                 
-                {/* Slider Component */}
-                <ReactSlider
-                  className="horizontal-slider"
-                  thumbClassName="slider-thumb"
-                  trackClassName="slider-track"
-                  min={0}
-                  max={1500}
-                  step={5}
-                  value={filters.priceRange}
-                  onChange={handlePriceRangeSliderChange}
-                />
-
-                {/* Manual input fields */}
+                {/* Manual input fields - Min and Max positioned correctly */}
                 <div className="manual-input">
                   <div className="input-group">
-                    <label htmlFor="minPrice">Min Price</label>
+                    {/* <label htmlFor="minPrice">Min Price</label> */}
+                    <span className="input-label">from:</span>  {/* Small text label above the input */}
                     <input
                       type="number"
                       id="minPrice"
@@ -355,11 +339,25 @@ function App() {
                       onChange={(e) => handleManualPriceChange(e, 'min')}
                       min="0"
                       max="1500"
+                      placeholder="min price"
                     />
                   </div>
 
+                  {/* Slider Component - Positioned in between the inputs */}
+                  <ReactSlider
+                    className="horizontal-slider"
+                    thumbClassName="slider-thumb"
+                    trackClassName="slider-track"
+                    min={0}
+                    max={1500}
+                    step={5}
+                    value={filters.priceRange}
+                    onChange={handlePriceRangeSliderChange}
+                  />
+
                   <div className="input-group">
-                    <label htmlFor="maxPrice">Max Price</label>
+                    {/* <label htmlFor="maxPrice">Max Price</label> */}
+                    <span className="input-label">to:</span>  {/* Small text label above the input */}
                     <input
                       type="number"
                       id="maxPrice"
@@ -368,6 +366,7 @@ function App() {
                       onChange={(e) => handleManualPriceChange(e, 'max')}
                       min="0"
                       max="1500"
+                      placeholder="max price"
                     />
                   </div>
                 </div>
