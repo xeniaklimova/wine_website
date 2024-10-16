@@ -1,10 +1,12 @@
-import WineDetail from './WineDetail'; // Add this line at the top of your App.js
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import ReactSlider from 'react-slider';
-import { BrowserRouter as Router, Routes, Route, NavLink, useParams } from 'react-router-dom'; 
-import Home from './Home'; 
+import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
+import Home from './Home';
 import NotFound from './NotFound';
+import WineQuiz from './WineQuiz';
+import Recommendations from './Recommendations';
+import WineDetail from './WineDetail';
 import './App.css';
 
 function App() {
@@ -12,39 +14,20 @@ function App() {
   const [filteredWines, setFilteredWines] = useState([]);
   const [sortOption, setSortOption] = useState('');
   const [searchQuery, setSearchQuery] = useState(''); // Search query state
-
-  // Manual price range setting through text box
-  const handleManualPriceChange = (e, type) => {
-    const value = parseInt(e.target.value, 10);
-    
-    if (type === 'min') {
-      setFilters({
-        ...filters,
-        priceRange: [Math.min(value, filters.priceRange[1]), filters.priceRange[1]]
-      });
-    } else if (type === 'max') {
-      setFilters({
-        ...filters,
-        priceRange: [filters.priceRange[0], Math.max(value, filters.priceRange[0])]
-      });
-    }
-  };
-  
-
-  // Visibility controls for collapsible sections
-  const [isCountryVisible, setIsCountryVisible] = useState(true);
-  const [isWineTypeVisible, setIsWineTypeVisible] = useState(true);
-  const [isYearVisible, setIsYearVisible] = useState(true);
-
   const [filters, setFilters] = useState({
     country: [],
     wineType: [],
     year: [],
     priceRange: [0, 1500],
   });
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Collapsible filter sections state
+  const [isCountryVisible, setIsCountryVisible] = useState(true);
+  const [isWineTypeVisible, setIsWineTypeVisible] = useState(true);
+  const [isYearVisible, setIsYearVisible] = useState(true);
 
   const winesPerPage = 20;
-  const [currentPage, setCurrentPage] = useState(1);
 
   // Load wine data
   useEffect(() => {
@@ -58,7 +41,7 @@ function App() {
     });
   }, []);
 
-  // Search and filter functionality
+  // Update filters and sorting when searchQuery or filters change
   useEffect(() => {
     let filtered = wines.filter(wine => {
       const searchStr = `${wine.title} ${wine.country} ${wine.variety}`.toLowerCase();
@@ -123,20 +106,20 @@ function App() {
   const renderPageNumbers = () => {
     const pageNumbers = [];
     const totalPages = Math.ceil(filteredWines.length / winesPerPage);
-  
+
     let startPage = currentPage - 2;
     let endPage = currentPage + 2;
-  
+
     if (startPage < 1) {
       startPage = 1;
       endPage = Math.min(5, totalPages); // Ensure only 5 pages show initially
     }
-  
+
     if (endPage > totalPages) {
       endPage = totalPages;
       startPage = Math.max(totalPages - 4, 1); // Ensure last few pages are visible
     }
-  
+
     for (let i = startPage; i <= endPage; i++) {
       pageNumbers.push(
         <button
@@ -148,8 +131,7 @@ function App() {
         </button>
       );
     }
-  
-    // Add ellipsis if there are more pages before or after
+
     if (startPage > 1) {
       pageNumbers.unshift(<span key="start-ellipsis">...</span>);
       pageNumbers.unshift(
@@ -158,7 +140,7 @@ function App() {
         </button>
       );
     }
-  
+
     if (endPage < totalPages) {
       pageNumbers.push(<span key="end-ellipsis">...</span>);
       pageNumbers.push(
@@ -167,11 +149,11 @@ function App() {
         </button>
       );
     }
-  
+
     return pageNumbers;
   };
 
-
+  // Filter handlers
   const handleSortChange = (e) => {
     setSortOption(e.target.value);
   };
@@ -222,7 +204,9 @@ function App() {
   return (
     <Router>
       <header className="header">
-        <h1>Wine Shop</h1>
+        <NavLink to="/" className="logo">
+          <h1>Wine Shop</h1>
+        </NavLink>
         <nav>
           <ul>
             <li><NavLink to="/" className={({ isActive }) => isActive ? 'active' : ''}>Home</NavLink></li>
@@ -240,191 +224,176 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home searchQuery={searchQuery} setSearchQuery={setSearchQuery} />} />
-        <Route path="/gallery" element={
-          <div className="layout">
-            <aside className="filter-sidebar">
-              {/* Country Filter */}
-              <div className="filter-section">
-                <h3 onClick={() => setIsCountryVisible(!isCountryVisible)} className="collapsible-title">
-                  Country {isCountryVisible ? '▾' : '▸'}
-                </h3>
-                {isCountryVisible && (
-                  <div className="country-list">
-                    <div>
-                      <input
-                        type="checkbox"
-                        id="AllCountries"
-                        value="All Countries"
-                        onChange={() => setFilters({ ...filters, country: [] })}
-                        checked={filters.country.length === 0}
-                      />
-                      <label htmlFor="AllCountries">All Countries</label>
+        <Route
+          path="/gallery"
+          element={
+            <div className="layout">
+              <aside className="filter-sidebar">
+                {/* Country Filter */}
+                <div className="filter-section">
+                  <h3 onClick={() => setIsCountryVisible(!isCountryVisible)} className="collapsible-title">
+                    Country {isCountryVisible ? '▾' : '▸'}
+                  </h3>
+                  {isCountryVisible && (
+                    <div className="country-list">
+                      {availableCountries.map(country => (
+                        <div key={country}>
+                          <input
+                            type="checkbox"
+                            id={country}
+                            value={country}
+                            onChange={() => handleCountryChange(country)}
+                            checked={filters.country.includes(country)}
+                          />
+                          <label htmlFor={country}>{country}</label>
+                        </div>
+                      ))}
                     </div>
-                    {availableCountries.map(country => (
-                      <div key={country}>
+                  )}
+                </div>
+
+                {/* Wine Type Filter */}
+                <div className="filter-section">
+                  <h3 onClick={() => setIsWineTypeVisible(!isWineTypeVisible)} className="collapsible-title">
+                    Wine Type {isWineTypeVisible ? '▾' : '▸'}
+                  </h3>
+                  {isWineTypeVisible && (
+                    <div className="wine-type-list">
+                      {wineTypes.map(type => (
+                        <div key={type}>
+                          <input
+                            type="checkbox"
+                            id={type}
+                            value={type}
+                            onChange={() => handleWineTypeChange(type)}
+                            checked={filters.wineType.includes(type)}
+                          />
+                          <label htmlFor={type}>{type}</label>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Year Filter */}
+                <div className="filter-section">
+                  <h3 onClick={() => setIsYearVisible(!isYearVisible)} className="collapsible-title">
+                    Year {isYearVisible ? '▾' : '▸'}
+                  </h3>
+                  {isYearVisible && (
+                    <div className="year-list">
+                      {availableYears.map(year => (
+                        <div key={year}>
+                          <input
+                            type="checkbox"
+                            id={year}
+                            value={year}
+                            onChange={() => handleYearChange(year)}
+                            checked={filters.year.includes(year)}
+                          />
+                          <label htmlFor={year}>{year}</label>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Price Range Filter */}
+                <div className="filter-section">
+                  <h3>Price Range</h3>
+                  <div className="price-input-slider">
+                    <div className="manual-input">
+                      <div className="input-group">
+                        <span className="input-label">From:</span>
                         <input
-                          type="checkbox"
-                          id={country}
-                          value={country}
-                          onChange={() => handleCountryChange(country)}
-                          checked={filters.country.includes(country)}
+                          type="number"
+                          className="price-input"
+                          value={filters.priceRange[0]}
+                          onChange={(e) => setFilters({
+                            ...filters,
+                            priceRange: [parseInt(e.target.value, 10), filters.priceRange[1]]
+                          })}
+                          min="0"
+                          max="1500"
                         />
-                        <label htmlFor={country}>{country}</label>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Wine Type Filter */}
-              <div className="filter-section">
-                <h3 onClick={() => setIsWineTypeVisible(!isWineTypeVisible)} className="collapsible-title">
-                  Wine Type {isWineTypeVisible ? '▾' : '▸'}
-                </h3>
-                {isWineTypeVisible && (
-                  <div className="wine-type-list">
-                    {wineTypes.map(type => (
-                      <div key={type}>
+                      <ReactSlider
+                        className="horizontal-slider"
+                        thumbClassName="slider-thumb"
+                        trackClassName="slider-track"
+                        min={0}
+                        max={1500}
+                        step={10}
+                        value={filters.priceRange}
+                        onChange={handlePriceRangeSliderChange}
+                      />
+                      <div className="input-group">
+                        <span className="input-label">To:</span>
                         <input
-                          type="checkbox"
-                          id={type}
-                          value={type}
-                          onChange={() => handleWineTypeChange(type)}
-                          checked={filters.wineType.includes(type)}
+                          type="number"
+                          className="price-input"
+                          value={filters.priceRange[1]}
+                          onChange={(e) => setFilters({
+                            ...filters,
+                            priceRange: [filters.priceRange[0], parseInt(e.target.value, 10)]
+                          })}
+                          min="0"
+                          max="1500"
                         />
-                        <label htmlFor={type}>{type}</label>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Year Filter */}
-              <div className="filter-section">
-                <h3 onClick={() => setIsYearVisible(!isYearVisible)} className="collapsible-title">
-                  Year {isYearVisible ? '▾' : '▸'}
-                </h3>
-                {isYearVisible && (
-                  <div className="year-list">
-                                       {availableYears.map(year => (
-                      <div key={year}>
-                        <input
-                          type="checkbox"
-                          id={year}
-                          value={year}
-                          onChange={() => handleYearChange(year)}
-                          checked={filters.year.includes(year)}
-                        />
-                        <label htmlFor={year}>{year}</label>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Price Range Filter */}
-              <h3 className="collapsible-title">Price Range</h3>
-              <div className="price-input-slider">
-                
-                {/* Manual input fields - Min and Max positioned correctly */}
-                <div className="manual-input">
-                  <div className="input-group">
-                    {/* <label htmlFor="minPrice">Min Price</label> */}
-                    <span className="input-label">from:</span>  {/* Small text label above the input */}
-                    <input
-                      type="number"
-                      id="minPrice"
-                      className="price-input"
-                      value={filters.priceRange[0]}
-                      onChange={(e) => handleManualPriceChange(e, 'min')}
-                      min="0"
-                      max="1500"
-                      placeholder="min price"
-                    />
-                  </div>
-
-                  {/* Slider Component - Positioned in between the inputs */}
-                  <ReactSlider
-                    className="horizontal-slider"
-                    thumbClassName="slider-thumb"
-                    trackClassName="slider-track"
-                    min={0}
-                    max={1500}
-                    step={5}
-                    value={filters.priceRange}
-                    onChange={handlePriceRangeSliderChange}
-                  />
-
-                  <div className="input-group">
-                    {/* <label htmlFor="maxPrice">Max Price</label> */}
-                    <span className="input-label">to:</span>  {/* Small text label above the input */}
-                    <input
-                      type="number"
-                      id="maxPrice"
-                      className="price-input"
-                      value={filters.priceRange[1]}
-                      onChange={(e) => handleManualPriceChange(e, 'max')}
-                      min="0"
-                      max="1500"
-                      placeholder="max price"
-                    />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Reset Filters Button */}
-              <button className="reset-button" onClick={resetFilters}>
-                Reset Filters
-              </button>
-            </aside>
+                {/* Reset Filters Button */}
+                <button className="reset-button" onClick={resetFilters}>
+                  Reset Filters
+                </button>
+              </aside>
 
-            {/* Wine Gallery */}
-            <div className="wine-gallery-container">
-              {/* Sort By Dropdown */}
-              <div className="sort-section">
-                <label htmlFor="sort-select">Sort By:</label>
-                <select id="sort-select" value={sortOption} onChange={handleSortChange}>
-                  <option value="">Default</option>
-                  <option value="name-asc">Name (A-Z)</option>
-                  <option value="name-desc">Name (Z-A)</option>
-                  <option value="highest-rated">Highest Rated</option>
-                  <option value="price-low-high">Price (Low-High)</option>
-                  <option value="price-high-low">Price (High-Low)</option>
-                </select>
-              </div>
+              <div className="wine-gallery-container">
+                {/* Sort By Dropdown */}
+                <div className="sort-section">
+                  <label htmlFor="sort-select">Sort By:</label>
+                  <select id="sort-select" value={sortOption} onChange={handleSortChange}>
+                    <option value="">Default</option>
+                    <option value="name-asc">Name (A-Z)</option>
+                    <option value="name-desc">Name (Z-A)</option>
+                    <option value="highest-rated">Highest Rated</option>
+                    <option value="price-low-high">Price (Low-High)</option>
+                    <option value="price-high-low">Price (High-Low)</option>
+                  </select>
+                </div>
 
-              {/* Wine Gallery Display */}
-              <div className="wine-gallery">
-                {currentWines.map((wine, index) => (
-                  <div key={index} className="wine-item">
-                    <NavLink to={`/wine/${index}`}>
-                      <img src={wine.img_url} alt={wine.title} />
-                      <h2>{wine.title}</h2>
-                      <p className="wine-price">${wine.price}</p>
-                    </NavLink>
-                  </div>
-                ))}
-              </div>
+                {/* Wine Gallery */}
+                <div className="wine-gallery">
+                  {currentWines.map((wine, index) => (
+                    <div key={index} className="wine-item">
+                      <NavLink to={`/wine/${index}`}>
+                        <img src={wine.img_url} alt={wine.title} />
+                        <h2>{wine.title}</h2>
+                        <p className="wine-price">${wine.price}</p>
+                      </NavLink>
+                    </div>
+                  ))}
+                </div>
 
-              {/* Pagination Controls */}
-              <div className="pagination-container">
-                <div className="pagination-controls">
+                {/* Pagination */}
+                <div className="pagination-container">
                   <button onClick={prevPage} disabled={currentPage === 1}>
                     Previous
                   </button>
-
                   {renderPageNumbers()}
-
                   <button onClick={nextPage} disabled={currentPage === totalPages}>
                     Next
                   </button>
                 </div>
               </div>
             </div>
-          </div>
-        } />
-
-        {/* Wine Detail Page Route */}
+          }
+        />
+        <Route path="/quiz" element={<WineQuiz wines={wines} setFilters={setFilters} />} />
+        <Route path="/recommendations" element={<Recommendations />} />
         <Route path="/wine/:wineId" element={<WineDetail wines={wines} />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
@@ -433,4 +402,3 @@ function App() {
 }
 
 export default App;
-
