@@ -21,6 +21,16 @@ body {
   margin: 0;
 }
 
+/* Remove underline from the Wine Shop link in the navigation bar */
+.header .logo {
+  text-decoration: none;
+  color: white; /* Ensure the color matches your design */
+}
+
+.header .logo:hover {
+  text-decoration: none; /* Ensure no underline on hover */
+}
+
 nav ul {
   list-style: none;
   margin: 0;

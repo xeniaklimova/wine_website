@@ -4,7 +4,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 function WineDetail({ wines }) {
   const { wineId } = useParams();
   const navigate = useNavigate();
-  const wine = wines[wineId];
+
+  // Decode the wineId from the URL (which is actually the wine title)
+  const decodedTitle = decodeURIComponent(wineId);
+
+  // Find the wine by its title
+  const wine = wines.find(wine => wine.title === decodedTitle);
 
   if (!wine) {
     return <h2>Wine not found</h2>;
@@ -21,7 +26,7 @@ function WineDetail({ wines }) {
   return (
     <div className="wine-detail">
       {/* Wine Image */}
-      <img src={wine.img_url} alt={wine.title} />
+      <img src={wine.img_url} alt={wine.title} className="wine-detail-image" />
 
       {/* Wine Information */}
       <div className="wine-info">

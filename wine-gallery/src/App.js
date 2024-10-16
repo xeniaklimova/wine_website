@@ -250,14 +250,28 @@ function App() {
       wineType: [],
       year: [],
       priceRange: [0, 1500],
-      flavors: []
+      flavors: [] // Ensure the flavor filter is fully reset
     });
-    setCurrentPage(1);
-    setSortOption('');
+    setCurrentPage(1); // Reset to the first page
+    setSortOption(''); // Reset sort option if needed
+  
+    // Clear the flavor query from the URL
+    navigate('/gallery', { replace: true });
   };
-
+  
+  
   const handleFlavorClick = (flavor) => {
-    navigate(`/gallery?flavor=${flavor}`);
+    setFilters((prevFilters) => {
+      // Check if the flavor is already in the filters
+      const newFlavors = prevFilters.flavors.includes(flavor)
+        ? prevFilters.flavors.filter(f => f !== flavor) // Remove if already selected
+        : [...prevFilters.flavors, flavor]; // Add if not selected
+  
+      return {
+        ...prevFilters,
+        flavors: newFlavors, // Update the flavors state
+      };
+    });
   };
 
   return (
@@ -360,8 +374,8 @@ function App() {
                       {['vanilla', 'leather', 'coffee', 'wood', 'smoky', 'fruit', 'berry', 'spice', 'chocolate', 'butter', 'herbs', 'flowers', 'citrus', 'mineral', 'nuts', 'caramel'].map(flavor => (
                         <button
                           key={flavor}
-                          className={`flavor-button ${flavor} ${filters.flavors.includes(flavor) ? 'selected' : ''}`}
-                          onClick={() => handleFlavorClick(flavor)}
+                          className={`flavor-button ${flavor} ${filters.flavors.includes(flavor) ? 'selected' : ''}`} // Selected class if in filters.flavors
+                          onClick={() => handleFlavorClick(flavor)} // Handle flavor click here
                         >
                           {flavor}
                         </button>
@@ -438,9 +452,9 @@ function App() {
 
                 {/* Wine Gallery */}
                 <div className="wine-gallery">
-                  {currentWines.map((wine, index) => (
-                    <div key={index} className="wine-item">
-                      <NavLink to={`/wine/${index}`}>
+                  {currentWines.map((wine) => (
+                    <div key={wine.title} className="wine-item">
+                      <NavLink to={`/wine/${encodeURIComponent(wine.title)}`}>
                         <img src={wine.img_url} alt={wine.title} />
                         <h2>{wine.title}</h2>
                         <p className="wine-price">${wine.price}</p>
