@@ -13,9 +13,11 @@ function useQuery() {
 }
 
 function AppWrapper() {
+  const [searchQuery, setSearchQuery] = useState('');
+
   return (
     <Router>
-      <App />
+      <App searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
     </Router>
   );
 }
@@ -108,35 +110,34 @@ function App() {
   // Update filters and sorting when searchQuery or filters change
   useEffect(() => {
     let filtered = wines.filter(wine => {
-      const searchStr = `${wine.title} ${wine.country} ${wine.variety}`.toLowerCase();
+      const searchStr = `${wine.title} ${wine.country} ${wine.wine_type} ${wine.variety}`.toLowerCase();
       return searchStr.includes(searchQuery.toLowerCase());
     });
-
+  
     if (filters.country.length > 0) {
       filtered = filtered.filter(wine => filters.country.includes(wine.country));
     }
-
+  
     if (filters.wineType.length > 0 && !filters.wineType.includes("All Types")) {
       filtered = filtered.filter(wine => filters.wineType.includes(wine.wine_type));
     }
-
+  
     if (filters.year.length > 0) {
       filtered = filtered.filter(wine => filters.year.includes(wine.year));
     }
-
+  
     filtered = filtered.filter(wine => {
       const price = parseFloat(wine.price);
       return price >= filters.priceRange[0] && price <= filters.priceRange[1];
     });
-
-    // Flavor tags filter
+  
     if (filters.flavors.length > 0) {
       filtered = filtered.filter(wine => {
         const wineFlavors = wine.extracted_flavors || [];
         return filters.flavors.every(flavor => wineFlavors.includes(flavor));
       });
     }
-
+  
     const sortedWines = sortWines(filtered, sortOption);
     setFilteredWines(sortedWines);
   }, [searchQuery, filters, wines, sortOption]);
@@ -289,11 +290,26 @@ function App() {
       </header>
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* Home Page */}
+        <Route path="/" element={<Home searchQuery={searchQuery} setSearchQuery={setSearchQuery} />} />
+
+        {/* Wine Gallery Page */}
         <Route
           path="/gallery"
           element={
             <div className="layout">
+              {/* Search Bar at the top of the gallery */}
+              <div className="gallery-search-container">
+                <input
+                  type="text"
+                  placeholder="Search for wines..."
+                  className="gallery-search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)} // Update the search query
+                />
+              </div>
+
+              {/* Sidebar for Filters */}
               <aside className="filter-sidebar">
                 {/* Country Filter */}
                 <div className="filter-section">
@@ -302,7 +318,7 @@ function App() {
                   </h3>
                   {isCountryVisible && (
                     <div className="country-list">
-                      {availableCountries.map(country => (
+                      {availableCountries.map((country) => (
                         <div key={country}>
                           <input
                             type="checkbox"
@@ -325,7 +341,7 @@ function App() {
                   </h3>
                   {isWineTypeVisible && (
                     <div className="wine-type-list">
-                      {wineTypes.map(type => (
+                      {wineTypes.map((type) => (
                         <div key={type}>
                           <input
                             type="checkbox"
@@ -348,7 +364,7 @@ function App() {
                   </h3>
                   {isYearVisible && (
                     <div className="year-list">
-                      {availableYears.map(year => (
+                      {availableYears.map((year) => (
                         <div key={year}>
                           <input
                             type="checkbox"
@@ -364,18 +380,18 @@ function App() {
                   )}
                 </div>
 
-                {/* Flavor tags */}
+                {/* Flavor Filter */}
                 <div className="filter-section">
                   <h3 onClick={() => setIsFlavorVisible(!isFlavorVisible)} className="collapsible-title">
                     Flavors {isFlavorVisible ? '▾' : '▸'}
                   </h3>
                   {isFlavorVisible && (
                     <div className="flavor-list">
-                      {['vanilla', 'leather', 'coffee', 'wood', 'smoky', 'fruit', 'berry', 'spice', 'chocolate', 'butter', 'herbs', 'flowers', 'citrus', 'mineral', 'nuts', 'caramel'].map(flavor => (
+                      {['vanilla', 'leather', 'coffee', 'wood', 'smoky', 'fruit', 'berry', 'spice', 'chocolate', 'butter', 'herbs', 'flowers', 'citrus', 'mineral', 'nuts', 'caramel'].map((flavor) => (
                         <button
                           key={flavor}
-                          className={`flavor-button ${flavor} ${filters.flavors.includes(flavor) ? 'selected' : ''}`} // Selected class if in filters.flavors
-                          onClick={() => handleFlavorClick(flavor)} // Handle flavor click here
+                          className={`flavor-button ${flavor} ${filters.flavors.includes(flavor) ? 'selected' : ''}`}
+                          onClick={() => handleFlavorClick(flavor)}
                         >
                           {flavor}
                         </button>
@@ -436,6 +452,7 @@ function App() {
                 </button>
               </aside>
 
+              {/* Wine Gallery Section */}
               <div className="wine-gallery-container">
                 {/* Sort By Dropdown */}
                 <div className="sort-section">
@@ -452,14 +469,14 @@ function App() {
 
                 {/* Wine Gallery */}
                 <div className="wine-gallery">
-                  {currentWines.map((wine) => (
-                    <div key={wine.title} className="wine-item">
-                      <NavLink to={`/wine/${encodeURIComponent(wine.title)}`}>
-                        <img src={wine.img_url} alt={wine.title} />
-                        <h2>{wine.title}</h2>
-                        <p className="wine-price">${wine.price}</p>
-                      </NavLink>
-                    </div>
+                {currentWines.map((wine, index) => (
+  <               div key={index} className="wine-item">
+                    <NavLink to={`/wine/${wine['Unnamed: 0']}`}>
+                      <img src={wine.img_url} alt={wine.title} />
+                      <h2>{wine.title}</h2>
+                      <p className="wine-price">${wine.price}</p>
+                    </NavLink>
+                  </div>
                   ))}
                 </div>
 
@@ -477,9 +494,14 @@ function App() {
             </div>
           }
         />
+
+        {/* Wine Detail Page */}
         <Route path="/wine/:wineId" element={<WineDetail wines={wines} />} />
+
+        {/* 404 Page */}
         <Route path="*" element={<NotFound />} />
       </Routes>
+
     </div>
   );
 }

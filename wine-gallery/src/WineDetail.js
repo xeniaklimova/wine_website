@@ -1,15 +1,12 @@
 import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, NavLink } from 'react-router-dom';
 
 function WineDetail({ wines }) {
   const { wineId } = useParams();
   const navigate = useNavigate();
 
-  // Decode the wineId from the URL (which is actually the wine title)
-  const decodedTitle = decodeURIComponent(wineId);
-
-  // Find the wine by its title
-  const wine = wines.find(wine => wine.title === decodedTitle);
+  // Find the wine by its Unnamed: 0 (wineId)
+  const wine = wines.find(wine => wine['Unnamed: 0'] === wineId);
 
   if (!wine) {
     return <h2>Wine not found</h2>;
@@ -18,13 +15,23 @@ function WineDetail({ wines }) {
   // Extract and format the flavors
   const flavors = wine.extracted_flavors ? wine.extracted_flavors.replace(/[\[\]']/g, '').split(', ') : [];
 
-  // Function to handle flavor click
-  const handleFlavorClick = (flavor) => {
-    navigate(`/gallery?flavor=${flavor}`);
+  // Function to handle the "Back" button
+  const handleBackClick = () => {
+    navigate(-1); // Go back to the previous page
   };
 
   return (
     <div className="wine-detail">
+      {/* Breadcrumb Navigation */}
+      <nav className="breadcrumb">
+        <NavLink to="/">Home</NavLink> &gt; <NavLink to="/gallery">Wine Gallery</NavLink> &gt; <span>{wine.title}</span>
+      </nav>
+
+      {/* Back Button */}
+      <button onClick={handleBackClick} className="back-button">
+        &larr; Back
+      </button>
+
       {/* Wine Image */}
       <img src={wine.img_url} alt={wine.title} className="wine-detail-image" />
 
@@ -45,7 +52,7 @@ function WineDetail({ wines }) {
             <strong>Flavors:</strong>
             <ul>
               {flavors.map((flavor, index) => (
-                <li key={index} className="flavor-item" onClick={() => handleFlavorClick(flavor)}>
+                <li key={index} className="flavor-item">
                   {flavor}
                 </li>
               ))}

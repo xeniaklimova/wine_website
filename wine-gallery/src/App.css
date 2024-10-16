@@ -543,3 +543,52 @@ input[type="checkbox"] {
 .wine-info a:hover {
   text-decoration: underline;
 }
+
+/* Search bar on the gallery page */
+.gallery-search-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.gallery-search {
+  padding: 10px;
+  width: 80%;
+  max-width: 600px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+/* Breadcrumb styling */
+.breadcrumb {
+  margin: 20px 0;
+  font-size: 14px;
+}
+
+.breadcrumb a {
+  color: #6A1D2F; /* Burgundy color for links */
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+/* Back button styling */
+.back-button {
+  background-color: #6A1D2F; /* Burgundy color */
+  color: white;
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.back-button:hover {
+  background-color: #9B461F; /* Darker burgundy on hover */
+}
